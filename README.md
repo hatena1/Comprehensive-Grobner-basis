@@ -43,3 +43,11 @@ http://www.math.kobe-u.ac.jp/Asir/asir-ja.html
 
 load("/Users/yokootakuma/ox/BGB/PGBMain.rr");\
 pgbmain(E, N, F, P, V, Ord);
+
+## ライセンス
+
+本プロジェクトはMITライセンスのもとで公開されています。
+
+## 貢献
+
+バグ報告や機能改善の提案はGitHubのIssuesで受け付けています。
