@@ -24,3 +24,10 @@ Risa/Asir のインストール方法については、以下の公式サイト�
 Risa/Asir 公式ページ：
 http://www.math.kobe-u.ac.jp/Asir/asir-ja.html
 
+## 使い方
+
+1. User/ox/BGBにPGBMain.rrファイルを入れる。
+2. User/ox/OpenXM/bin/asirを起動する。
+3. load("PGBMain.rr")を実行する。
+4. pgbmain(E,N,F,P,V,Ord)を実行する。\
+   (E,N:パラメータPの多項式集合, F:パラメータPと変数Vの多項式集合,P:パラメータのリスト，V:変数, Ord:項順序,V(E)-V(N)のときのCGSの計算)
