@@ -43,8 +43,8 @@ http://www.math.kobe-u.ac.jp/Asir/asir-ja.html
 
 ## 入力と出力の例
 
-入力
-リポジトリフォルダ内の 中間発表.pdf の 4 ページを例として扱います。
+### 入力\
+リポジトリフォルダ内の 中間発表.pdf の 4 ページを例として扱います。\
 load("gr");\
 load("PGBMain.rr");\
 f_1 = (x-a)^2 + y^2 - r_1^2;\
