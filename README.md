@@ -29,20 +29,28 @@ http://www.math.kobe-u.ac.jp/Asir/asir-ja.html
 1. User/ox/BGB に PGBMain.rr ファイルを配置します。
 2. User/ox/OpenXM/bin/asir を起動します。
 3. 以下のコマンドを順に実行します。\
+   load("gr");
    load("/Users/yokootakuma/ox/BGB/PGBMain.rr");\
    pgbmain(E, N, F, P, V, Ord);
    
-   - E, N: パラメータ P の多項式集合
+   - E: 満たす条件、つまり V(E) = 0 になっていいもの（式のリスト）。空なら [] とする。
+   - N: 除外する条件、つまり V(N) = 0 になってほしくないもの（一つの式）。空なら 1 とする。
    - F: パラメータ P と変数 V の多項式集合
    - P: パラメータのリスト
    - V: 変数
    - Ord: 項順序（V(E) - V(N) のときの CGS の計算）
-5. 結果はリストとして出力されます。
+4. 結果はリストとして出力されます。
 
 ## 入力と出力の例
 
-load("/Users/yokootakuma/ox/BGB/PGBMain.rr");\
-pgbmain(E, N, F, P, V, Ord);
+入力
+リポジトリフォルダ内の 中間発表.pdf の 4 ページを例として扱います。
+load("gr");\
+load("PGBMain.rr");\
+f_1 = (x-a)^2 + y^2 - r_1^2;\
+f_2 = (x-b)^2 + y^2 - r_2^2;\
+f_3 = x^2 - a*x - b*x + a*b + y^2;\
+pgbmain([], 1, [f_1, f_2, f_3], [x, y], [a, b, r_1, r_2], 2);
 
 ## ライセンス
 
