@@ -30,7 +30,7 @@ http://www.math.kobe-u.ac.jp/Asir/asir-ja.html
 2. User/ox/OpenXM/bin/asir を起動します。
 3. 以下のコマンドを順に実行します。\
    load("PGBMain.rr");\
-   pgbmain(E, N, F, P, V, Ord);\
+   pgbmain(E, N, F, P, V, Ord);
    
    - E, N: パラメータ P の多項式集合
    - F: パラメータ P と変数 V の多項式集合
