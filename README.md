@@ -21,4 +21,6 @@ Risa/Asir
 
 Risa/Asir のインストール方法については、以下の公式サイトを参照してください。
 
-Risa/Asir 公式ページ
+Risa/Asir 公式ページ：
+http://www.math.kobe-u.ac.jp/Asir/asir-ja.html
+
