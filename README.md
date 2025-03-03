@@ -29,7 +29,7 @@ http://www.math.kobe-u.ac.jp/Asir/asir-ja.html
 1. User/ox/BGB に PGBMain.rr ファイルを配置します。
 2. User/ox/OpenXM/bin/asir を起動します。
 3. 以下のコマンドを順に実行します。\
-   load("/User/ox/OpenXM/lib/asir-contrib/noro_pd.rr");\
+   load("/Users/yokootakuma/ox/BGB/PGBMain.rr");\
    pgbmain(E, N, F, P, V, Ord);
    
    - E, N: パラメータ P の多項式集合
@@ -41,5 +41,5 @@ http://www.math.kobe-u.ac.jp/Asir/asir-ja.html
 
 ## 入力と出力の例
 
-load("/User/ox/OpenXM/lib/asir-contrib/noro_pd.rr");\
+load("/Users/yokootakuma/ox/BGB/PGBMain.rr");\
 pgbmain(E, N, F, P, V, Ord);
