@@ -1,0 +1,438 @@
+load("gr");
+load("/Users/hatena/OpenXM/src/asir-contrib/packages/src/noro_pd.rr");
+
+
+
+/*-------------------------------------*/
+
+
+/* Setの要素にElementがあれば1を返す。なければ0を返す。*/
+
+
+def memberof(Element,Set)
+{
+  for ( T = Set; T != [];
+        T = cdr(T) )
+    if ( car(T) == Element )
+      return 1;
+  return 0;
+}
+
+/*-------------------------------------*/
+
+
+/*AとBの和集合を返す*/
+
+
+def union(A,B)
+{
+  C = B;
+  for ( T = A; T != [];
+        T = cdr(T) )
+    if ( !memberof(car(T),B) )
+      C = cons(car(T),C);
+  return C;
+}
+
+
+/*-------------------------------------*/
+
+
+/*AとBの差集合を返す*/
+
+
+def difference(A,B)
+{
+  C = union(A,B);
+  D = [];
+  for ( T = C; T != [];
+        T = cdr(T) )
+    if ( !memberof(car(T),B) )
+      D = cons(car(T),D);
+  return D;
+}
+
+
+/*-------------------------------------*/
+
+
+/*AとBの積集合を返す*/
+
+
+def intersection(A,B)
+{
+  C = [];
+  for ( T = A; T != [];
+        T = cdr(T) )
+    if ( memberof(car(T),B) )
+      C = cons(car(T),C);
+  return C;
+}
+
+/*-------------------------------------*/
+
+
+/*AとBの要素同士の積を返す*/
+
+
+def product_ll(A,B)
+{
+  C = [];
+  for (I=0; I<length(A); I++) {
+    for (J=0; J<length(B); J++) {
+      C = append(C,[A[I]*B[J]]);
+    }
+  }
+  return C;
+}
+
+
+
+/*-------------------------------------*/
+
+
+/*多項式AとリストBの要素同士の積を返す*/
+
+
+def product(A,B)
+{
+  C = [];
+  for (I=0; I<length(B); I++) {
+    C = append(C,[A*B[I]]);
+  }
+  return C;
+}
+
+
+
+/*-------------------------------------*/
+
+
+/*Gの先頭項のリストを返す*/
+
+
+def lm(G,V)
+{
+  C = [];
+  for (I=0; I<length(G); I++) {
+    D = dp_ptod(G[I],V);
+    C = append(C,[dp_dtop(dp_hm(D),V)]);
+  }
+  return C;
+}
+
+
+/*-------------------------------------*/
+
+
+/*多項式に含まれる単項式のリストを返す*/
+/*N:多項式*/
+
+def p_monomials(N,P)
+{
+  C = [];
+  DN=dp_ptod(N,P);
+
+  /*先頭項を一つずつまとめる*/
+  while(DN!=0){
+
+    HM=dp_hm(DN); /*先頭項*/
+    C = cons(dp_dtop(HM,P),C);
+    Rest=dp_rest(DN); /*残り*/
+    DN=Rest;
+  }
+
+  return C;
+}
+
+
+
+/*-------------------------------------*/
+
+
+/*入力Eはグレブナ基底*/
+
+def zero_check(E,N,P){
+ 
+
+  Minipoly=minipoly(E,P,0,N,ttt);
+  dp_ord(0);
+  MP=dp_ptod(Minipoly,[ttt]); /*内部*/
+  HT=dp_ht(MP); /*先頭項*/
+  Rest=dp_rest(MP);
+
+  if(Rest==0){
+    return 0;
+  }
+  return 1;
+}
+
+
+
+/*-------------------------------------*/
+
+/*Eの正次元のときの確認*/
+/*E:多項式のリスト，N:多項式，P:パラメータのリスト*/
+/*P:パラメータのリスト，V:変数, Ord:項順序*/
+/*0なら空、1なら空じゃない*/
+
+def ccheck(E,N,P) {
+  
+  /*独立変数MIS*/
+  MIS=noro_pd.maxindep(E,P,0);
+
+  /*ランダムな要素*/
+  A=[];
+  for(I=0;I<length(MIS);I++){
+    A=cons(random()/100,A);
+  }
+
+
+  /*Aを代入*/
+  for(J=0;J<length(A);J++){
+    E=map(subst,E,MIS[J],A[J]);
+  }
+  
+
+  /*グレブナー基底*/
+	SPE=gr(E,P,0);
+
+  SPE_MIS=noro_pd.maxindep(SPE,P,0);
+
+  /*spEが0次元ならzero_check*をする*/
+  if(length(SPE_MIS)==0){
+    /*zero_checkが1だったら1を返す*/
+		if(zero_check(SPE,N,P)==1){
+		  return 1;
+		}
+	}
+	return 0;
+}
+
+
+
+def icheck(E,N,P) {
+	LOOPS=10;
+	for(I=1;I<=LOOPS;I++){
+		M=p_monomials(N,P);
+		S=0;
+		for(J=0;J<length(M);J++){
+		  S=S+p_nf(N*M[J],E,P,0);
+		}
+		if (S=0) {
+		  return 1;
+		}
+		N=S;
+	}
+	return 0;
+}
+
+
+/*新しい変数を追加してグレブナ基底を計算*/
+def primecheck(E,N,P) {
+  P=append(P,[d]);
+  G_d=gr(append(E,[N*d-1]),P,0);
+  if(G_d[0]==1 || G_d[0]==-1){
+    return 0;
+  }
+  return 1;
+}
+
+
+
+def positive_check(E,N,P) {
+	if(ccheck(E,N,P)==1){
+    return 1;
+  }
+  if(icheck(E,N,P)!=1) {
+    return 1;
+  }
+  if(primecheck(E,N,P)==1) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
+
+
+/*-------------------------------------*/
+
+/*ディクソン基底MDBasis*/
+
+def mdbasis(F,V){
+
+  C=[];
+  S=map(dp_ptod,F,V);
+  A=map(dp_ht,S);
+  T=gr(map(dp_dtop,A,V),V,0);
+  R=map(dp_ptod,T,V);
+  for(J=0;J<length(R);J++){
+    for(I=0;I<length(S);I++){
+      if(dp_ht(S[I])==R[J]){
+        C=cons(S[I],C);
+        break;
+      }
+    }
+  }
+  C=map(dp_dtop,C,V);
+  return [T,C];
+}
+
+
+/*-------------------------------------*/
+
+
+/*V(E)-V(N), Pパラメータ*/
+/*Eは項順序0のグレブナー基底とする*/
+/*0なら空*/
+/*E:多項式のリスト，N:多項式，P:パラメータのリスト*/
+ 
+def emptyset_check(E,N,P){
+ 
+  if(E==[]){
+    return 1;
+  }
+  /* 正規形を計算する */
+  A=p_nf(N,E,P,0);
+   
+  /* 正規形が0なら矛盾している */
+  if(A==0){
+    return 0;
+  }
+   
+  if(E==[1]){
+    return 0;
+  }
+
+  /* 極大独立集合(max independent set) */
+  MIS=noro_pd.maxindep(E,P,0);
+   
+  if(length(MIS)==0){
+    return zero_check(E,N,P); /*ゼロ*/
+  }else{
+    return positive_check(E,N,P); /*正*/
+  }
+}
+ 
+/*---------------------*/
+
+/*E,N:パラメータPの多項式集合, F:パラメータPと変数Vの多項式集合*/
+/*P:パラメータのリスト，V:変数, Ord:項順序*/
+/*V(E)-V(N)のときのCGSの計算*/
+
+def pgbmain(E,N,F,P,V,Ord){
+
+  /*1.(E,N)が矛盾しているなら、0を返す*/
+  if (emptyset_check(E,N,P)==0) {
+    return [];
+  }
+  /*2.FとEの簡約グレブナ基底をGとする*/
+  G = gr(append(F,E),append(V,P),[[Ord,length(V)],[0,length(P)]]);
+
+  /*3.1がGに入っていたら、{(E,N,{1})}を返す*/
+  if (G[0]==1 || G[0]==-1) {
+    return [[E,N,[1]]];
+  }
+  
+
+  G_r = difference(G,E);
+  if(G_r==[]) {
+    return [[E,N,[0]]];
+  }
+
+  G_m = mdbasis(G_r,V);
+      
+  /*8.(G_r,N*{h})が矛盾しないなら、PGBはPGBと{(G_r,N*{h},G_m)}とする*/
+  L=map(dp_hc,map(dp_ptod,G_m[1],V));
+  H=L[0];
+  PGB=[];
+
+  for(I=1;I<length(L);I++){
+
+    H=H*L[I];
+  }
+
+  HF=fctr(H);
+  A=1;
+  for(I=1;I<length(HF);I++){
+    A=A*HF[I][0];
+  }
+
+  if (emptyset_check(E,N*A,P)!=0) {
+    if(G_m[0][0]==1){
+      PGB = [[E,N*A,[1]]];
+    }
+    else{
+      PGB = [[E,N*A,G_m[1]]];
+    }
+  }
+
+
+  /*9.PGBとPGBMain()を返す*/
+  for (J=1; J<length(HF); J++) {
+    G_h=cons(HF[J][0],E);
+    G_h=gr(G_h,P,0);
+    PGB = append(PGB, pgbmain(G_h,N,F,P,V,Ord));
+    N=N*HF[J][0];
+  }
+
+  return PGB;
+
+ 
+ 
+}
+
+
+/*-------------------------------------*/
+
+def hyouzi(G) {
+  while (G!=[]){
+    G1=car(G);
+    G=cdr(G);
+    print(G1[0],0);
+    print(", ",0);
+    print(G1[1],1);
+    print(G1[2],1);
+    print(" ");
+  }
+}
+
+
+
+
+
+/*-------------------------------------*/
+
+
+
+/*-------------------------------------*/
+
+
+
+/*-------------------------------------*/
+
+
+
+/*-------------------------------------*/
+
+
+
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+/*-------------------------------------*/
+
+end$
