@@ -1,5 +1,5 @@
 load("gr");
-load("/Users/hatena/OpenXM/src/asir-contrib/packages/src/noro_pd.rr");
+load("noro_pd.rr"); /*ここは各自変更すること*/
 
 
 
