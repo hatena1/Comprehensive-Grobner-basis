@@ -1,5 +1,5 @@
 load("gr");
-load("noro_pd.rr"); /*ここは各自変更すること*/
+load("noro_pd.rr"); /*ここは各自で変更すること*/
 
 
 
