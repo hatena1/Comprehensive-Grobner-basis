@@ -1,4 +1,5 @@
-
+load("gr");
+load("noro_pd.rr"); /*ここは各自で変更すること*/
 
 
 
@@ -337,6 +338,9 @@ def pgbmain(E,N,F,P,V,Ord){
   
 
   G_r = difference(G,E);
+  if(G_r==[]) {
+    return [[E,N,[0]]];
+  }
 
   G_m = mdbasis(G_r,V);
       
@@ -373,7 +377,6 @@ def pgbmain(E,N,F,P,V,Ord){
     PGB = append(PGB, pgbmain(G_h,N,F,P,V,Ord));
     N=N*HF[J][0];
   }
-
 
   return PGB;
 
