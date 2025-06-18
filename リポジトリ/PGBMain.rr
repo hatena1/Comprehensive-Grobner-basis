@@ -219,7 +219,7 @@ def icheck(E,N,P) {
 		for(J=0;J<length(M);J++){
 		  S=S+p_nf(N*M[J],E,P,0);
 		}
-		if (S=0) {
+		if (S==0) {
 		  return 1;
 		}
 		N=S;
