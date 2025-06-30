@@ -1,5 +1,5 @@
 load("gr");
-load("/Users/usr/OpenXM/src/asir-contrib/packages/src/noro_pd.rr");
+load("/Users/hatena/OpenXM/src/asir-contrib/packages/src/noro_pd.rr");
 
 
 
